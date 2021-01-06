@@ -16,10 +16,11 @@ Create anaconda env for FastSurfer
 $ cd FastSurfer
 $ conda env create -f fastsurfer_env_gpu.yml
 ```
-Edit FastSeg/run_fastsurfer.sh to set 'cmd_dir'
-cmd_dir=PATH_TO_FASTSEG_DIR
 
-Set PATH to FastSeg/run_fastsurfer.sh or copy it to the directory in the PATH.
+Copy FastSeg/run_fastsurfer.sh to the directory in the PATH.
+
+Edit run_fastsurfer.sh to set 'cmd_dir'
+cmd_dir=PATH_TO_FASTSEG_DIR
 
 USAGE:
 
