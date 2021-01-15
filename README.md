@@ -5,6 +5,12 @@ FastSeg is a fast and accurate anatomical image segmentation tool for making the
 
 INSTALL:
 
+Clone FastSeg
+```
+cd ~
+git clone https://github.com/mamisaki/FastSeg.git
+```
+
 Clone FastSurfer from https://github.com/Deep-MI/FastSurfer
 ```
 $ cd FastSeg
