@@ -25,9 +25,6 @@ conda env create -f fastsurfer_env_gpu.yml
 
 Copy FastSeg/run_fastsurfer.sh to the directory in the PATH.
 
-Edit run_fastsurfer.sh to set 'cmd_dir'
-cmd_dir=PATH_TO_FASTSEG_DIR
-
 USAGE:
 
 run_fastsurfer.sh INPUT_FILE [OUTPUT_PREFIX]
