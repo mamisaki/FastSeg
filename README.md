@@ -13,14 +13,14 @@ git clone https://github.com/mamisaki/FastSeg.git
 
 Clone FastSurfer from https://github.com/Deep-MI/FastSurfer
 ```
-$ cd FastSeg
-$ git clone https://github.com/Deep-MI/FastSurfer.git
+cd FastSeg
+git clone https://github.com/Deep-MI/FastSurfer.git
 ```
 
 Create anaconda env for FastSurfer
 ```
-$ cd FastSurfer
-$ conda env create -f fastsurfer_env_gpu.yml
+cd FastSurfer
+conda env create -f fastsurfer_env_gpu.yml
 ```
 
 Copy FastSeg/run_fastsurfer.sh to the directory in the PATH.
