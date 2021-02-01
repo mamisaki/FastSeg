@@ -1,7 +1,7 @@
 # FastSeg
-MRI anatomical image segmentation tool for fMRI data processing using the FastSurfer.
+MRI anatomical image segmentation for fMRI data processing using the FastSurfer.
 
-FastSeg is a fast and accurate anatomical image segmentation tool for making the brain and tissue segmentation masks for using in fMRI data processing.
+FastSeg is a fast and accurate anatomical image segmentation tool for making the brain, white matter, and ventricle masks for fMRI data processing.
 
 INSTALL:
 
