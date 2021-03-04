@@ -23,7 +23,7 @@ cd FastSurfer
 conda env create -f fastsurfer_env_gpu.yml
 ```
 
-Copy FastSeg/run_fastSeg.sh to the directory in the PATH.
+Copy ~/FastSeg/run_fastSeg.sh to the directory in the PATH (e.g., ~/bin/).
 
 USAGE:
 
