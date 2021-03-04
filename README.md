@@ -3,27 +3,27 @@ MRI anatomical image segmentation for fMRI data processing using the FastSurfer.
 
 FastSeg is a fast and accurate anatomical image segmentation tool for making the brain, white matter, and ventricle masks for fMRI data processing.
 
-INSTALL:
+## INSTALL
 
-Clone FastSeg
+1 Clone FastSeg
 ```
 cd ~
 git clone https://github.com/mamisaki/FastSeg.git
 ```
 
-Clone FastSurfer from https://github.com/Deep-MI/FastSurfer
+2 Clone FastSurfer from https://github.com/Deep-MI/FastSurfer
 ```
 cd FastSeg
 git clone https://github.com/Deep-MI/FastSurfer.git
 ```
 
-Create anaconda env for FastSurfer
+3 Create anaconda env for FastSurfer
 ```
 cd FastSurfer
 conda env create -f fastsurfer_env_gpu.yml
 ```
 
-Copy ~/FastSeg/run_fastSeg.sh to the directory in the PATH (e.g., ~/bin/).
+4 Copy ~/FastSeg/run_fastSeg.sh to the directory in the PATH (e.g., ~/bin/).
 
 USAGE:
 
