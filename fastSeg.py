@@ -64,7 +64,7 @@ def prep_files(opts):
     # --- Convert BRIK to NIfTI ---
     if ftype in ('.HEAD', '.BRIK'):
         prefix = Path(str(prefix).replace('+orig', '').replace('+tlrc', ''))
-        nii_f = in_f.absolute().parent / \
+        nii_f = prefix.absolute().parent / \
             (in_f.name.replace(''.join(exts), '') + '.nii.gz')
         cmd = f"3dAFNItoNIFTI -overwrite -prefix {nii_f} {in_f}"
         subprocess.check_call(cmd, shell=True, stderr=subprocess.PIPE)
