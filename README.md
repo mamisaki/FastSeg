@@ -22,6 +22,7 @@ git clone https://github.com/Deep-MI/FastSurfer.git
 You need to install miniconda or anaconda if you do not have conda environment.
 
 https://docs.conda.io/en/latest/miniconda.html
+
 https://www.anaconda.com/products/individual#Downloads
 
 ```
