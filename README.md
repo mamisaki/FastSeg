@@ -18,6 +18,11 @@ git clone https://github.com/Deep-MI/FastSurfer.git
 ```
 
 3 Create anaconda env for FastSurfer
+
+You need to install miniconda or anaconda if you do not have conda environment.
+https://docs.conda.io/en/latest/miniconda.html
+https://www.anaconda.com/products/individual#Downloads
+
 ```
 cd FastSurfer
 conda env create -f fastsurfer_env_gpu.yml
