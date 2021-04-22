@@ -8,8 +8,6 @@ FASTSEG_DIR=$HOME/FastSeg
 conda activate fastsurfer_gpu
 
 # Run fastSeg
-# cmd_dir=$FASTSEG_PATH
-#cmd_dir=$(cd $(dirname $0); pwd)  # The same directory as this file
 if [ "$#" -eq 1 ]; then
     $FASTSEG_DIR/fastSeg.py $1
 elif [ "$#" -eq 2 ]; then

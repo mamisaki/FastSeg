@@ -1,0 +1,21 @@
+name: fastsurfer_gpu
+
+channels:
+  - pytorch
+  - defaults
+  - conda-forge
+  
+dependencies:
+  - cudatoolkit=11.1
+  - h5py
+  - matplotlib
+  - nibabel
+  - numpy
+  - pillow
+  - python
+  - pytorch
+  - scikit-image
+  - scikit-sparse
+  - scipy
+  - torchvision
+
