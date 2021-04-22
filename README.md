@@ -41,3 +41,11 @@ FASTSEG_DIR=$HOME/FastSeg
 USAGE:
 
 run_fastSeg.sh INPUT_FILE [OUTPUT_PREFIX] [BATCH_SIZE]
+
+## If your GPU is not compatible with the old CUDA toolkit (10.0)
+You many need to upgrade conda packages of cuda-toolkit an pytorch.
+```
+conda remove --name fastsurfer_gpu --all
+cd ~/FastSeg
+conda env create -f fastsurfer_env_gpu_cuda11.yml
+```
