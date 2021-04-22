@@ -9,12 +9,13 @@ Anatomical image segmentation for real-time fMRI processing using FastSurfer
 
 
 # %% import ===================================================================
+import numpy as np
 import argparse
+import os
 from pathlib import Path
 import subprocess
 import torch
 import nibabel as nib
-import numpy as np
 
 # Debug
 if '__file__' not in locals():
@@ -74,7 +75,7 @@ def prep_files(opts):
 
 
 # %% run_FastSurferCNN ========================================================
-def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix):
+def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix, batch_size):
     """
     Parameters
     ----------
@@ -86,6 +87,8 @@ def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix):
         input file.
     prefix : Path
         output prefix.
+    batch_size : int
+        batch size for inference.
 
     Returns
     -------
@@ -96,10 +99,11 @@ def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix):
     # Set output filename
     fsSeg_mgz = str(prefix) + '.mgz'
 
-    # RUn
+    # Run
     cmd = f"cd {fastsurfer_d} && "
     cmd += f"python {eval_cmd.relative_to(fastsurfer_d)}"
     cmd += f" --in_name {in_f} --out_name {fsSeg_mgz} --simple_run"
+    cmd += f" --batch_size {batch_size}"
     if no_cuda:
         cmd += ' --no_cuda'
     subprocess.check_call(cmd, shell=True)
@@ -161,21 +165,31 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('in_f', help='input file')
     parser.add_argument('-o', '--out', dest='prefix', help='output prefix')
-
+    parser.add_argument('--batch_size', type=int, default=8,
+                        help="Batch size for inference. Default: 8")
+    parser.add_argument('--fastsurfer_dir', help="FastSurfer directory")
     opts = parser.parse_args()
 
     # --- Check FastSurfer installation ---
-    script_d = Path(__file__).absolute().parent
-    fastsurfer_d = script_d / 'FastSurfer'
-    assert fastsurfer_d.is_dir()
-    eval_cmd = fastsurfer_d / 'FastSurferCNN' / 'eval.py'
-    assert eval_cmd.is_file()
+    fastsurfer_dir = opts.fastsurfer_dir
+    if fastsurfer_dir is None:
+        if 'FASTSURFER_HOME' in os.environ:
+            fastsurfer_dir = Path(os.environ['FASTSURFER_HOME'])
+        else:
+            fastsurfer_dir = Path.home() / 'RTPSpy' / 'FastSurfer'
+
+    fastsurfer_dir = Path(fastsurfer_dir)
+    assert fastsurfer_dir.is_dir(), f"Not found {fastsurfer_dir} directory.\n"
+
+    eval_cmd = fastsurfer_dir / 'FastSurferCNN' / 'eval.py'
+    assert eval_cmd.is_file(), f"Not found {eval_cmd}\n"
 
     # --- Prepare files ---
     in_f, prefix = prep_files(opts)
 
     # --- Run FastSurferCNN ---
-    fsSeg_mgz = run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix)
+    fsSeg_mgz = run_FastSurferCNN(eval_cmd, fastsurfer_dir, in_f, prefix,
+                                  opts.batch_size)
 
     # --- Get Brain, WM, Vent masks ---
     out_fs = make_seg_images(fsSeg_mgz, prefix, aseg_mask_IDs)
