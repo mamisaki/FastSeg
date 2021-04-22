@@ -32,7 +32,7 @@ conda env create -f fastsurfer_env_gpu.yml
 
 4 Copy ~/FastSeg/run_fastSeg.sh to the directory in the PATH (e.g., ~/bin/).
 
-Edit th following lines in run_fastSeg.sh
+Edit following lines in run_fastSeg.sh to the anaconda and FastSeg installed location.
 ```
 CONDA_DIR=$HOME/anaconda3
 FASTSEG_DIR=$HOME/FastSeg
