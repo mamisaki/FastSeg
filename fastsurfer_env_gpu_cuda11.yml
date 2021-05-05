@@ -3,7 +3,7 @@ name: fastsurfer_gpu
 channels:
   - pytorch
   - defaults
-  - conda-forge
+  - nvidia
   
 dependencies:
   - cudatoolkit=11.1
