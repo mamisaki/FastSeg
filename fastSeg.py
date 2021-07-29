@@ -11,7 +11,6 @@ Anatomical image segmentation for real-time fMRI processing using FastSurfer
 # %% import ===================================================================
 import numpy as np
 import argparse
-import os
 from pathlib import Path
 import subprocess
 import torch
@@ -196,7 +195,7 @@ if __name__ == "__main__":
     if Path(fsSeg_mgz).is_file():
         Path(fsSeg_mgz).unlink()
 
-    if Path(opts.in_f).absolute() != in_f.absolute() and in_f.is_file():
+    if not Path(opts.in_f).samefile(in_f) and in_f.is_file():
         in_f.unlink()
 
     out_fs_str = '\n  '.join([str(p) for p in out_fs])
