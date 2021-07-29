@@ -111,7 +111,7 @@ def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix, batch_size):
 
 
 # %% make_seg_images ==========================================================
-def make_seg_images(fsSeg_mgz, prefix, aseg_mask_IDs=aseg_mask_IDs):
+def make_seg_images(fsSeg_mgz, ref_f, prefix, aseg_mask_IDs=aseg_mask_IDs):
 
     aseg_img = nib.load(fsSeg_mgz)
     header = aseg_img.header
@@ -139,11 +139,11 @@ def make_seg_images(fsSeg_mgz, prefix, aseg_mask_IDs=aseg_mask_IDs):
             cmd += f" -prefix {tmp_f}"
             cmd += " -frac 1.0 -dilate_inputs 5 -5 -fill_holes &&"
 
-        cmd += f"3dfractionize -overwrite -template {in_f} -input {tmp_f}"
+        cmd += f"3dfractionize -overwrite -template {ref_f} -input {tmp_f}"
         cmd += f" -prefix {tmp_f} -clip 0.5 &&"
 
         if seg_name == 'Brain':
-            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {in_f}"
+            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {ref_f}"
             cmd += " -expr 'step(a)*b'"
         else:
             cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f}"
@@ -189,7 +189,7 @@ if __name__ == "__main__":
                                   opts.batch_size)
 
     # --- Get Brain, WM, Vent masks ---
-    out_fs = make_seg_images(fsSeg_mgz, prefix, aseg_mask_IDs)
+    out_fs = make_seg_images(fsSeg_mgz, in_f, prefix, aseg_mask_IDs)
 
     # --- Clean intermediate files ---
     if Path(fsSeg_mgz).is_file():
