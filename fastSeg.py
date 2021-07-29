@@ -174,10 +174,7 @@ if __name__ == "__main__":
     # --- Check FastSurfer installation ---
     fastsurfer_dir = opts.fastsurfer_dir
     if fastsurfer_dir is None:
-        if 'FASTSURFER_HOME' in os.environ:
-            fastsurfer_dir = Path(os.environ['FASTSURFER_HOME'])
-        else:
-            fastsurfer_dir = Path.home() / 'RTPSpy' / 'FastSurfer'
+        fastsurfer_dir = Path(__file__).absolute().parent / 'FastSurfer'
 
     fastsurfer_dir = Path(fastsurfer_dir)
     assert fastsurfer_dir.is_dir(), f"Not found {fastsurfer_dir} directory.\n"
