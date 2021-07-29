@@ -150,7 +150,8 @@ def make_seg_images(fsSeg_mgz, prefix, aseg_mask_IDs=aseg_mask_IDs):
             cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f}"
             cmd += " -expr 'step(a)'"
 
-        subprocess.check_call(cmd, shell=True)
+        subprocess.check_call(cmd, shell=True, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
         if tmp_f.is_file():
             tmp_f.unlink()
 
@@ -198,7 +199,7 @@ if __name__ == "__main__":
     if Path(fsSeg_mgz).is_file():
         Path(fsSeg_mgz).unlink()
 
-    if Path(opts.in_f).absolute() != in_f and in_f.is_file():
+    if Path(opts.in_f).absolute() != in_f.absolute() and in_f.is_file():
         in_f.unlink()
 
     out_fs_str = '\n  '.join([str(p) for p in out_fs])
