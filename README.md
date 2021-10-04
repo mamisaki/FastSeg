@@ -40,7 +40,7 @@ FASTSEG_DIR=$HOME/FastSeg
 
 USAGE:
 
-run_fastSeg.sh INPUT_FILE [OUTPUT_PREFIX] [BATCH_SIZE]
+run_fastSeg.sh INPUT_FILE [-o OUTPUT_PREFIX] [--batch_size BATCH_SIZE] [-s SEGMENT_NAMES]
 
 ## If your GPU is not compatible with the old CUDA toolkit (10.0)
 You many need to upgrade conda packages of cuda-toolkit for pytorch.
