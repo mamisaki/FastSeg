@@ -8,12 +8,4 @@ FASTSEG_DIR=$HOME/FastSeg
 conda activate fastsurfer_gpu
 
 # Run fastSeg
-if [ "$#" -eq 1 ]; then
-    $FASTSEG_DIR/fastSeg.py $1
-elif [ "$#" -eq 2 ]; then
-    $FASTSEG_DIR/fastSeg.py $1 -o $2
-elif [ "$#" -eq 3 ]; then
-    $FASTSEG_DIR/fastSeg.py $1 -o $2 --batch_size $3
-else
-    echo "usage: run_fastSeg.py input_file [OUTPUT_PREFIX] [BATCH_SIZE]"
-fi
+$FASTSEG_DIR/fastSeg.py $@

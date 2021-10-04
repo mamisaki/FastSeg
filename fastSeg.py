@@ -23,8 +23,97 @@ if '__file__' not in locals():
 no_cuda = (not torch.cuda.is_available())
 
 aseg_mask_IDs = {'Brain': ['>0'],
+                 'GM': ['>0', -2, -7, -41, -46, -192, -251, -252, -253, -254,
+                        -255, -4, -5, -14, -15, -31, -43, -44, -63, -72, -77],
                  'WM': [2, 41, 192, 251, 252, 253, 254, 255],
-                 'Vent': [4, 43]}
+                 'Vent': [4, 43],
+                 'Left-Thalamus-Proper': [10],
+                 'Left-Caudate': [11],
+                 'Left-Putamen': [12],
+                 'Left-Pallidum': [13],
+                 'Brain-Stem': [16],
+                 'Left-Hippocampus': [17],
+                 'Left-Amygdala': [18],
+                 'Left-Accumbens-area': [26],
+                 'Left-VentralDC': [28],
+                 'Right-Thalamus-Proper': [49],
+                 'Right-Caudate': [50],
+                 'Right-Putamen': [51],
+                 'Right-Pallidum': [52],
+                 'Right-Hippocampus': [53],
+                 'Right-Amygdala': [54],
+                 'Right-Accumbens-area': [58],
+                 'Right-VentralDC': [60],
+                 'ctx-lh-caudalanteriorcingulate': [1002],
+                 'ctx-lh-caudalmiddlefrontal': [1003],
+                 'ctx-lh-corpuscallosum': [1004],
+                 'ctx-lh-cuneus': [1005],
+                 'ctx-lh-entorhinal': [1006],
+                 'ctx-lh-fusiform': [1007],
+                 'ctx-lh-inferiorparietal': [1008],
+                 'ctx-lh-inferiortemporal': [1009],
+                 'ctx-lh-isthmuscingulate': [1010],
+                 'ctx-lh-lateraloccipital': [1011],
+                 'ctx-lh-lateralorbitofrontal': [1012],
+                 'ctx-lh-lingual': [1013],
+                 'ctx-lh-medialorbitofrontal': [1014],
+                 'ctx-lh-middletemporal': [1015],
+                 'ctx-lh-parahippocampal': [1016],
+                 'ctx-lh-paracentral': [1017],
+                 'ctx-lh-parsopercularis': [1018],
+                 'ctx-lh-parsorbitalis': [1019],
+                 'ctx-lh-parstriangularis': [1020],
+                 'ctx-lh-pericalcarine': [1021],
+                 'ctx-lh-postcentral': [1022],
+                 'ctx-lh-posteriorcingulate': [1023],
+                 'ctx-lh-precentral': [1024],
+                 'ctx-lh-precuneus': [1025],
+                 'ctx-lh-rostralanteriorcingulate': [1026],
+                 'ctx-lh-rostralmiddlefrontal': [1027],
+                 'ctx-lh-superiorfrontal': [1028],
+                 'ctx-lh-superiorparietal': [1029],
+                 'ctx-lh-superiortemporal': [1030],
+                 'ctx-lh-supramarginal': [1031],
+                 'ctx-lh-frontalpole': [1032],
+                 'ctx-lh-temporalpole': [1033],
+                 'ctx-lh-transversetemporal': [1034],
+                 'ctx-lh-insula': [1035],
+                 'ctx-rh-unknown': [2000],
+                 'ctx-rh-bankssts': [2001],
+                 'ctx-rh-caudalanteriorcingulate': [2002],
+                 'ctx-rh-caudalmiddlefrontal': [2003],
+                 'ctx-rh-corpuscallosum': [2004],
+                 'ctx-rh-cuneus': [2005],
+                 'ctx-rh-entorhinal': [2006],
+                 'ctx-rh-fusiform': [2007],
+                 'ctx-rh-inferiorparietal': [2008],
+                 'ctx-rh-inferiortemporal': [2009],
+                 'ctx-rh-isthmuscingulate': [2010],
+                 'ctx-rh-lateraloccipital': [2011],
+                 'ctx-rh-lateralorbitofrontal': [2012],
+                 'ctx-rh-lingual': [2013],
+                 'ctx-rh-medialorbitofrontal': [2014],
+                 'ctx-rh-middletemporal': [2015],
+                 'ctx-rh-parahippocampal': [2016],
+                 'ctx-rh-paracentral': [2017],
+                 'ctx-rh-parsopercularis': [2018],
+                 'ctx-rh-parsorbitalis': [2019],
+                 'ctx-rh-parstriangularis': [2020],
+                 'ctx-rh-pericalcarine': [2021],
+                 'ctx-rh-postcentral': [2022],
+                 'ctx-rh-posteriorcingulate': [2023],
+                 'ctx-rh-precentral': [2024],
+                 'ctx-rh-precuneus': [2025],
+                 'ctx-rh-rostralanteriorcingulate': [2026],
+                 'ctx-rh-rostralmiddlefrontal': [2027],
+                 'ctx-rh-superiorfrontal': [2028],
+                 'ctx-rh-superiorparietal': [2029],
+                 'ctx-rh-superiortemporal': [2030],
+                 'ctx-rh-supramarginal': [2031],
+                 'ctx-rh-frontalpole': [2032],
+                 'ctx-rh-temporalpole': [2033],
+                 'ctx-rh-transversetemporal': [2034],
+                 'ctx-rh-insula': [2035]}
 
 
 # %% prep_files ===============================================================
@@ -111,7 +200,7 @@ def run_FastSurferCNN(eval_cmd, fastsurfer_d, in_f, prefix, batch_size):
 
 
 # %% make_seg_images ==========================================================
-def make_seg_images(fsSeg_mgz, ref_f, prefix, aseg_mask_IDs=aseg_mask_IDs):
+def make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs=aseg_mask_IDs):
 
     aseg_img = nib.load(fsSeg_mgz)
     header = aseg_img.header
@@ -119,13 +208,16 @@ def make_seg_images(fsSeg_mgz, ref_f, prefix, aseg_mask_IDs=aseg_mask_IDs):
     aseg_V = np.asarray(aseg_img.dataobj)
 
     out_fs = []
-    for seg_name, seg_idx in aseg_mask_IDs.items():
+    for seg_name in segs:
+        seg_idx = aseg_mask_IDs[seg_name]
         out_f = str(prefix) + f"_{seg_name}.nii.gz"
 
         seg = np.zeros_like(aseg_V)
         for idx in seg_idx:
             if type(idx) == str:
                 seg += eval(f"aseg_V {idx}")
+            elif idx < 0:
+                seg -= aseg_V == -idx
             else:
                 seg += aseg_V == idx
 
@@ -139,18 +231,17 @@ def make_seg_images(fsSeg_mgz, ref_f, prefix, aseg_mask_IDs=aseg_mask_IDs):
             cmd += f" -prefix {tmp_f}"
             cmd += " -frac 1.0 -dilate_inputs 5 -5 -fill_holes &&"
 
-        cmd += f"3dfractionize -overwrite -template {ref_f} -input {tmp_f}"
+        cmd += f"3dfractionize -overwrite -template {in_f} -input {tmp_f}"
         cmd += f" -prefix {tmp_f} -clip 0.5 &&"
 
         if seg_name == 'Brain':
-            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {ref_f}"
+            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {in_f}"
             cmd += " -expr 'step(a)*b'"
         else:
             cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f}"
             cmd += " -expr 'step(a)'"
 
-        subprocess.check_call(cmd, shell=True, stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE)
+        subprocess.check_call(cmd, shell=True)
         if tmp_f.is_file():
             tmp_f.unlink()
 
@@ -165,6 +256,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('in_f', help='input file')
     parser.add_argument('-o', '--out', dest='prefix', help='output prefix')
+    parser.add_argument('-s', '--seg', dest='segs', nargs='+',
+                        default=['Brain', 'WM', 'Vent'],
+                        help='Output segments')
     parser.add_argument('--batch_size', type=int, default=8,
                         help="Batch size for inference. Default: 8")
     parser.add_argument('--fastsurfer_dir', help="FastSurfer directory")
@@ -181,6 +275,11 @@ if __name__ == "__main__":
     eval_cmd = fastsurfer_dir / 'FastSurferCNN' / 'eval.py'
     assert eval_cmd.is_file(), f"Not found {eval_cmd}\n"
 
+    # Check segmentation variable
+    segs = opts.segs
+    for seg in segs:
+        assert seg in aseg_mask_IDs.keys(), f"{seg} is not defined.\n"
+
     # --- Prepare files ---
     in_f, prefix = prep_files(opts)
 
@@ -189,13 +288,14 @@ if __name__ == "__main__":
                                   opts.batch_size)
 
     # --- Get Brain, WM, Vent masks ---
-    out_fs = make_seg_images(fsSeg_mgz, in_f, prefix, aseg_mask_IDs)
+    out_fs = make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs)
 
     # --- Clean intermediate files ---
     if Path(fsSeg_mgz).is_file():
         Path(fsSeg_mgz).unlink()
 
-    if not Path(opts.in_f).samefile(in_f) and in_f.is_file():
+    if Path(opts.in_f).stat().st_ino != Path(in_f).stat().st_ino and \
+            in_f.is_file():
         in_f.unlink()
 
     out_fs_str = '\n  '.join([str(p) for p in out_fs])
