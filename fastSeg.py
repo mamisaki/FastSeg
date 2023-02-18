@@ -292,9 +292,6 @@ if __name__ == "__main__":
     out_fs = make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs)
 
     # --- Clean intermediate files ---
-    if Path(fsSeg_mgz).is_file():
-        Path(fsSeg_mgz).unlink()
-
     if Path(opts.in_f).stat().st_ino != Path(in_f).stat().st_ino and \
             in_f.is_file():
         in_f.unlink()
