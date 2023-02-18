@@ -210,17 +210,20 @@ def make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs=aseg_mask_IDs):
 
     out_fs = []
     for seg_name in segs:
-        seg_idx = aseg_mask_IDs[seg_name]
         out_f = str(prefix) + f"_{seg_name}.nii.gz"
+        if seg_name == 'aseg':
+            seg = aseg_V
+        else:
+            seg_idx = aseg_mask_IDs[seg_name]
 
-        seg = np.zeros_like(aseg_V)
-        for idx in seg_idx:
-            if type(idx) == str:
-                seg += eval(f"aseg_V {idx}")
-            elif idx < 0:
-                seg -= aseg_V == -idx
-            else:
-                seg += aseg_V == idx
+            seg = np.zeros_like(aseg_V)
+            for idx in seg_idx:
+                if type(idx) == str:
+                    seg += eval(f"aseg_V {idx}")
+                elif idx < 0:
+                    seg -= aseg_V == -idx
+                else:
+                    seg += aseg_V == idx
 
         tmp_f = prefix.parent / f'rm_{seg_name}.nii.gz'
         seg_nii_img = nib.Nifti1Image(seg, affine, header)
@@ -231,16 +234,20 @@ def make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs=aseg_mask_IDs):
             cmd += f"3dmask_tool -overwrite -input {tmp_f}"
             cmd += f" -prefix {tmp_f}"
             cmd += " -frac 1.0 -dilate_inputs 5 -5 -fill_holes &&"
-
-        cmd += f"3dfractionize -overwrite -template {in_f} -input {tmp_f}"
-        cmd += f" -prefix {tmp_f} -clip 0.5 &&"
-
-        if seg_name == 'Brain':
-            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {in_f}"
-            cmd += " -expr 'step(a)*b'"
+        
+        if seg_name == 'aseg':
+            cmd += f"3dresample -overwrite -master {in_f} -input {tmp_f}"
+            cmd += f" -prefix {tmp_f} -rmode NN &&"
         else:
-            cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f}"
-            cmd += " -expr 'step(a)'"
+            cmd += f"3dfractionize -overwrite -template {in_f} -input {tmp_f}"
+            cmd += f" -prefix {tmp_f} -clip 0.5 &&"
+
+            if seg_name == 'Brain':
+                cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f} -b {in_f}"
+                cmd += " -expr 'step(a)*b'"
+            else:
+                cmd += f"3dcalc -overwrite -prefix {out_f} -a {tmp_f}"
+                cmd += " -expr 'step(a)'"
 
         subprocess.check_call(cmd, shell=True)
         if tmp_f.is_file():
@@ -258,7 +265,7 @@ if __name__ == "__main__":
     parser.add_argument('in_f', help='input file')
     parser.add_argument('-o', '--out', dest='prefix', help='output prefix')
     parser.add_argument('-s', '--seg', dest='segs', nargs='+',
-                        default=['Brain', 'WM', 'Vent'],
+                        default=['aseg', 'Brain', 'WM', 'Vent'],
                         help='Output segments')
     parser.add_argument('--batch_size', type=int, default=8,
                         help="Batch size for inference. Default: 8")
@@ -292,6 +299,9 @@ if __name__ == "__main__":
     out_fs = make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs)
 
     # --- Clean intermediate files ---
+    if Path(fsSeg_mgz).is_file():
+        Path(fsSeg_mgz).unlink()
+ 
     if Path(opts.in_f).stat().st_ino != Path(in_f).stat().st_ino and \
             in_f.is_file():
         in_f.unlink()
