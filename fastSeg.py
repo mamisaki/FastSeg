@@ -22,7 +22,8 @@ if '__file__' not in locals():
 
 no_cuda = (not torch.cuda.is_available())
 
-aseg_mask_IDs = {'Brain': ['>0'],
+aseg_mask_IDs = {'aseg': None,
+                 'Brain': ['>0'],
                  'GM': ['>0', -2, -7, -41, -46, -192, -251, -252, -253, -254,
                         -255, -4, -5, -14, -15, -31, -43, -44, -63, -72, -77],
                  'WM': [2, 41, 192, 251, 252, 253, 254, 255],
@@ -237,7 +238,7 @@ def make_seg_images(fsSeg_mgz, prefix, segs, aseg_mask_IDs=aseg_mask_IDs):
         
         if seg_name == 'aseg':
             cmd += f"3dresample -overwrite -master {in_f} -input {tmp_f}"
-            cmd += f" -prefix {tmp_f} -rmode NN &&"
+            cmd += f" -prefix {out_f} -rmode NN"
         else:
             cmd += f"3dfractionize -overwrite -template {in_f} -input {tmp_f}"
             cmd += f" -prefix {tmp_f} -clip 0.5 &&"
