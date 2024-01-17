@@ -27,7 +27,7 @@ https://www.anaconda.com/products/individual#Downloads
 
 ```
 cd FastSurfer
-conda env create -f fastsurfer_env_gpu.yml
+conda env create -f ~/FastSeg/fastsurfer_env_gpu_custom.yml
 ```
 
 4 Copy ~/FastSeg/run_fastSeg.sh to the directory in the PATH (e.g., ~/bin/).
