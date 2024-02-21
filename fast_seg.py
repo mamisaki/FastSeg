@@ -195,7 +195,7 @@ class FastSeg:
             nii_f = prefix.absolute().parent / \
                 (in_f.name.replace(''.join(exts), '') + '.nii.gz')
             cmd = f"3dAFNItoNIFTI -overwrite -prefix {nii_f} {in_f}"
-            subprocess.check_call(cmd, shell=True, stderr=subprocess.PIPE)
+            subprocess.check_call(cmd, shell=True, stderr=subprocess.STDOUT)
             in_f = nii_f
 
         return (in_f, prefix)
@@ -343,7 +343,8 @@ class FastSeg:
             if img_space is not None:
                 cmd = f"3drefit -space {img_space} {out_f}"
                 try:
-                    subprocess.check_output(shlex.split(cmd))
+                    subprocess.check_output(shlex.split(cmd),
+                                            stderr=subprocess.PIPE)
                 except Exception:
                     pass
 
