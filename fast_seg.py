@@ -147,7 +147,7 @@ class FastSeg:
 
         # --- Clean intermediate files ---
         if Path(prefix).is_dir():
-            shutil.rmtree(prefix)
+            shutil.rmtree(prefix, ignore_errors=True)
 
         if Path(in_f).stat().st_ino != Path(input_f).stat().st_ino and \
                 in_f.is_file():
