@@ -33,7 +33,7 @@ class FastSeg:
                      'GM': ['>0', -2, -7, -41, -46, -192, -251, -252, -253,
                             -254, -255, -4, -5, -14, -15, -31, -43, -44, -63,
                             -72, -77],
-                     'WM': [2, 41, 192, 251, 252, 253, 254, 255],
+                     'WM': [2, 7, 46, 41, 192, 251, 252, 253, 254, 255],
                      'wmparc': [2, 4, 43, 41, 192, 251, 252, 253, 254, 255],
                      'Vent': [4, 43],
                      'Vent_all': [4, 5, 14, 15, 43, 44, 72, 213, 221],
@@ -135,12 +135,12 @@ class FastSeg:
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def run(self, input_f, prefix=None, batch_size=1,
-            segs=['aseg', 'Brain', 'WM', 'Vent']):
+            segs=['aseg', 'Brain', 'WM', 'Vent'], no_cereb=False):
         # --- Prepare files ---
         in_f, prefix = self.prep_files(input_f, prefix)
 
         # --- Run FastSurferCNN ---
-        fsSeg_mgz = self.run_seg_only(in_f, prefix, batch_size)
+        fsSeg_mgz = self.run_seg_only(in_f, prefix, batch_size, no_cereb)
 
         # --- Get segmentation ---
         out_fs = self.make_seg_images(in_f, fsSeg_mgz, prefix, segs)
@@ -201,7 +201,7 @@ class FastSeg:
         return (in_f, prefix)
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def run_seg_only(self, in_f, prefix, batch_size=1, seg_cereb=False):
+    def run_seg_only(self, in_f, prefix, batch_size=1, no_cereb=False):
         """
         run_FastSurferCNN
         Parameters
@@ -212,8 +212,8 @@ class FastSeg:
             output prefix.
         batch_size : int
             batch size for inference.
-        seg_cereb : bool
-            Run cerebellum segmentation
+        no_cereb : bool
+            No cerebellum segmentation
 
         Returns
         -------
@@ -226,7 +226,7 @@ class FastSeg:
         cmd = f"./{self.run_cmd.relative_to(self.fastsurfer_dir)}"
         cmd += f" --t1 {in_f} --sd {work_dir}"
         cmd += f" --sid {Path(prefix).name} --seg_only --no_biasfield"
-        if not seg_cereb:
+        if no_cereb:
             cmd += " --no_cereb"
         cmd += f" --batch {batch_size}"
         if no_cuda:
@@ -367,6 +367,7 @@ if __name__ == '__main__':
                         default=['Brain', 'WM', 'Vent', 'aseg'],
                         help='Output segmentations')
     parser.add_argument('--batch_size', default=1)
+    parser.add_argument('--no_cereb', action='store_true')
     args = parser.parse_args()
 
     input_f = Path(args.input)
@@ -378,10 +379,12 @@ if __name__ == '__main__':
             stem = Path(stem).stem
         outprefix = input_f.parent / stem
     segs = args.seg
+    no_cereb = args.no_cereb
     batch_size = args.batch_size
 
     # Make FastSeg instance
     fastSeg = FastSeg()
 
     # run
-    fastSeg.run(input_f, outprefix, batch_size=batch_size, segs=segs)
+    fastSeg.run(input_f, outprefix, batch_size=batch_size, segs=segs,
+                no_cereb=no_cereb)
