@@ -1,0 +1,31 @@
+name: fastsurfer
+
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  - h5py=3.7.0
+  - lapy=1.0.1
+  - matplotlib=3.7.1
+  - nibabel=5.1.0
+  - numpy=1.25.0
+  - pandas=1.5.3
+  - pillow
+  - pip
+  - python=3.10
+  - python-dateutil=2.8.2
+  - pyyaml=6.0
+  - scikit-image=0.19.3
+  - scikit-learn=1.2.2
+  - scipy=1.10.1
+  - setuptools
+  - tensorboard=2.12.1
+  - tqdm=4.65.0
+  - yacs=0.1.8
+  - simpleitk
+  - pytorch
+  - torchvision
+  - pytorch-cuda=12.1
