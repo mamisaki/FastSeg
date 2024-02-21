@@ -8,12 +8,16 @@ FastSeg is a fast and accurate anatomical image segmentation tool for making the
 1 Clone FastSeg
 ```
 cd ~
+```
+```
 git clone https://github.com/mamisaki/FastSeg.git
 ```
 
 2 Clone FastSurfer from https://github.com/Deep-MI/FastSurfer
 ```
 cd FastSeg
+```
+```
 git clone https://github.com/Deep-MI/FastSurfer.git
 ```
 
@@ -26,7 +30,9 @@ https://docs.conda.io/en/latest/miniconda.html
 https://www.anaconda.com/products/individual#Downloads
 
 ```
-cd FastSurfer
+cd FastSeg
+```
+```
 conda env create -f ~/FastSeg/fastsurfer.yml
 ```
 
